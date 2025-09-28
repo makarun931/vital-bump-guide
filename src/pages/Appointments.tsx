@@ -3,10 +3,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Calendar, Clock, MapPin, Phone, Mail, User } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Calendar, Clock, MapPin, Phone, Mail, User, Heart, Baby } from "lucide-react";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 const Appointments = () => {
-  const appointments = [
+  const { toast } = useToast();
+  const [appointments, setAppointments] = useState([
     {
       id: 1,
       patientName: "Sarah Johnson",
@@ -18,7 +23,12 @@ const Appointments = () => {
       location: "Women's Health Center - Room 203",
       status: "confirmed",
       weeks: "32 weeks",
-      avatar: "/placeholder.svg"
+      avatar: "/placeholder.svg",
+      medicalHistory: "Gestational diabetes in previous pregnancy",
+      allergies: "Penicillin",
+      bloodType: "O+",
+      emergencyContact: "John Johnson (husband) - +1 (555) 123-4568",
+      notes: "Patient prefers morning appointments"
     },
     {
       id: 2,
@@ -31,7 +41,12 @@ const Appointments = () => {
       location: "Imaging Department - Suite 150",
       status: "pending",
       weeks: "20 weeks",
-      avatar: "/placeholder.svg"
+      avatar: "/placeholder.svg",
+      medicalHistory: "First pregnancy, no complications",
+      allergies: "None known",
+      bloodType: "A+",
+      emergencyContact: "David Chen (husband) - +1 (555) 987-6544",
+      notes: "Vegetarian diet, takes prenatal vitamins"
     },
     {
       id: 3,
@@ -44,7 +59,12 @@ const Appointments = () => {
       location: "Laboratory - Floor 1",
       status: "confirmed",
       weeks: "16 weeks",
-      avatar: "/placeholder.svg"
+      avatar: "/placeholder.svg",
+      medicalHistory: "Previous C-section delivery",
+      allergies: "Latex",
+      bloodType: "B-",
+      emergencyContact: "Carlos Rodriguez (husband) - +1 (555) 456-7891",
+      notes: "Prefers Spanish interpreter"
     },
     {
       id: 4,
@@ -57,9 +77,23 @@ const Appointments = () => {
       location: "Consultation Room 5",
       status: "confirmed",
       weeks: "28 weeks",
-      avatar: "/placeholder.svg"
+      avatar: "/placeholder.svg",
+      medicalHistory: "Hypertension, well controlled",
+      allergies: "Sulfa drugs",
+      bloodType: "AB+",
+      emergencyContact: "Michael Williams (husband) - +1 (555) 321-0988",
+      notes: "Requires blood pressure monitoring"
     }
-  ];
+  ]);
+
+  const handleCancelAppointment = (appointmentId: number, patientName: string) => {
+    setAppointments(prev => prev.filter(apt => apt.id !== appointmentId));
+    toast({
+      title: "Appointment Cancelled",
+      description: `${patientName}'s appointment has been successfully cancelled.`,
+      variant: "destructive",
+    });
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -151,15 +185,108 @@ const Appointments = () => {
                   </div>
                   
                   <div className="flex space-x-3 pt-4 border-t border-border">
-                    <Button variant="outline" size="sm" className="border-primary text-primary hover:bg-primary-light">
-                      View Details
-                    </Button>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" size="sm" className="border-primary text-primary hover:bg-primary-light">
+                          View Details
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-2xl">
+                        <DialogHeader>
+                          <DialogTitle className="flex items-center space-x-3">
+                            <Avatar className="h-12 w-12">
+                              <AvatarImage src={appointment.avatar} alt={appointment.patientName} />
+                              <AvatarFallback className="bg-primary-light text-primary">
+                                <User className="h-6 w-6" />
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <h3 className="text-xl font-semibold">{appointment.patientName}</h3>
+                              <p className="text-muted-foreground">{appointment.weeks}</p>
+                            </div>
+                          </DialogTitle>
+                        </DialogHeader>
+                        <div className="grid md:grid-cols-2 gap-6 mt-6">
+                          <div className="space-y-4">
+                            <div>
+                              <h4 className="font-semibold text-foreground mb-2 flex items-center">
+                                <Calendar className="h-4 w-4 mr-2 text-primary" />
+                                Appointment Details
+                              </h4>
+                              <div className="space-y-2 text-sm">
+                                <p><span className="font-medium">Type:</span> {appointment.appointment}</p>
+                                <p><span className="font-medium">Date:</span> {appointment.date}</p>
+                                <p><span className="font-medium">Time:</span> {appointment.time}</p>
+                                <p><span className="font-medium">Location:</span> {appointment.location}</p>
+                              </div>
+                            </div>
+                            <div>
+                              <h4 className="font-semibold text-foreground mb-2 flex items-center">
+                                <Phone className="h-4 w-4 mr-2 text-primary" />
+                                Contact Information
+                              </h4>
+                              <div className="space-y-2 text-sm">
+                                <p><span className="font-medium">Email:</span> {appointment.patientEmail}</p>
+                                <p><span className="font-medium">Phone:</span> {appointment.patientPhone}</p>
+                                <p><span className="font-medium">Emergency:</span> {appointment.emergencyContact}</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="space-y-4">
+                            <div>
+                              <h4 className="font-semibold text-foreground mb-2 flex items-center">
+                                <Heart className="h-4 w-4 mr-2 text-primary" />
+                                Medical Information
+                              </h4>
+                              <div className="space-y-2 text-sm">
+                                <p><span className="font-medium">Blood Type:</span> {appointment.bloodType}</p>
+                                <p><span className="font-medium">Allergies:</span> {appointment.allergies}</p>
+                                <p><span className="font-medium">Medical History:</span> {appointment.medicalHistory}</p>
+                              </div>
+                            </div>
+                            <div>
+                              <h4 className="font-semibold text-foreground mb-2 flex items-center">
+                                <Baby className="h-4 w-4 mr-2 text-primary" />
+                                Pregnancy Progress
+                              </h4>
+                              <div className="space-y-2 text-sm">
+                                <p><span className="font-medium">Current Week:</span> {appointment.weeks}</p>
+                                <p><span className="font-medium">Notes:</span> {appointment.notes}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                    
                     <Button variant="outline" size="sm">
                       Reschedule
                     </Button>
-                    <Button variant="outline" size="sm" className="text-destructive border-destructive hover:bg-destructive hover:text-destructive-foreground">
-                      Cancel
-                    </Button>
+                    
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="outline" size="sm" className="text-destructive border-destructive hover:bg-destructive hover:text-destructive-foreground">
+                          Cancel
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Cancel Appointment</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Are you sure you want to cancel {appointment.patientName}'s appointment for {appointment.appointment} on {appointment.date}? This action cannot be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Keep Appointment</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => handleCancelAppointment(appointment.id, appointment.patientName)}
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                          >
+                            Cancel Appointment
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
                 </CardContent>
               </Card>
