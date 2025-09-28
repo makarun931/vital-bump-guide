@@ -1,8 +1,11 @@
 import { AlertTriangle, BookOpen, MessageSquare, Pill, Plus, Stethoscope } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const QuickActions = () => {
+  const navigate = useNavigate();
+  
   const actions = [
     {
       title: "Emergency Contact",
@@ -62,6 +65,11 @@ const QuickActions = () => {
                   action.urgent ? action.color : `hover:bg-muted/50`
                 }`}
                 style={!action.urgent ? { background: action.color } : {}}
+                onClick={() => {
+                  if (action.title === "Chat with Doctor") {
+                    navigate('/appointments');
+                  }
+                }}
               >
                 <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
                   action.urgent ? "bg-white/20" : "bg-white/10"

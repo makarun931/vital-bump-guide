@@ -2,8 +2,11 @@ import { Calendar, Clock, MapPin, User } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
 
 const AppointmentCard = () => {
+  const navigate = useNavigate();
+  
   const appointments = [
     {
       id: 1,
@@ -55,7 +58,7 @@ const AppointmentCard = () => {
           <CardTitle className="text-lg font-semibold text-foreground">
             Upcoming Appointments
           </CardTitle>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={() => navigate('/appointments')}>
             Schedule New
           </Button>
         </div>
@@ -98,7 +101,7 @@ const AppointmentCard = () => {
               <Button variant="ghost" size="sm">
                 Reschedule
               </Button>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" onClick={() => navigate('/appointments')}>
                 View Details
               </Button>
             </div>

@@ -1,7 +1,10 @@
 import { Bell, Calendar, Heart, Menu, Settings, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const navigate = useNavigate();
+
   return (
     <header className="bg-card border-b border-border shadow-soft">
       <div className="container mx-auto px-4 py-4">
@@ -19,10 +22,10 @@ const Header = () => {
 
           {/* Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
-            <Button variant="ghost" size="sm" className="text-foreground hover:text-primary">
+            <Button variant="ghost" size="sm" className="text-foreground hover:text-primary" onClick={() => navigate('/')}>
               Dashboard
             </Button>
-            <Button variant="ghost" size="sm" className="text-foreground hover:text-primary">
+            <Button variant="ghost" size="sm" className="text-foreground hover:text-primary" onClick={() => navigate('/appointments')}>
               Appointments
             </Button>
             <Button variant="ghost" size="sm" className="text-foreground hover:text-primary">
